@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Image Encoding</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.message.label }}<br>
+            {{ form.message(size=32) }}<br>
+            {% for error in form.message.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.message_key.label }}<br>
+            {{ form.message_key(size=32) }}<br>
+            {% for error in form.message_key.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.message_terminator() }} {{ form.message_terminator.label }}<br>
+        </p>
+        <p>{{ form.image_submit() }}</p>
+    </form>
+    {% if image %}
+    <h1>Image</h1>
+        <a href={{image}} download>
+          <img src={{image}}>
+        </a>
+    {% endif %}
+{% endblock %}

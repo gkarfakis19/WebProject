@@ -7,3 +7,9 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+class ImageSelectorForm(FlaskForm):
+    message_terminator= BooleanField("Use a message terminator")
+    image_submit= SubmitField("Encode")
+    message= StringField("Message", validators=[DataRequired()])
+    message_key=StringField("Key",validators=[DataRequired()])

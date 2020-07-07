@@ -1,6 +1,8 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for,send_file
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm,ImageSelectorForm
+from app.imageprocess import imageencode
+
 
 @app.route('/')
 @app.route('/index')
@@ -25,3 +27,15 @@ def login():
         flash(f'Login requested for user {form.username.data}, remember_me={form.remember_me.data}')
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/imageprocess', methods=['GET', 'POST'])
+def imageprocess():
+    form = ImageSelectorForm()
+    if form.validate_on_submit():
+        f=open("Message.txt","w+")
+        f.write(form.message.data)
+        f.close()
+        imageencode(form.message_key.data,form.message_terminator.data)
+        #return send_file("static/encodedsample.png", as_attachment=True)
+        return render_template('imageprocess.html', title='Image Process', form=form, image="static/encodedsample.png")
+    return render_template('imageprocess.html', title='Image Process', form=form)
