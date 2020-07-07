@@ -1,6 +1,1 @@
-from flask import Flask
-
-
-
-x=input("mhm")
-print(x)
+from app import app
