@@ -3,9 +3,7 @@ from app import app
 from app.forms import LoginForm,ImageSelectorForm
 from app.imageprocess import imageencode
 from app.filehandler import image_flush
-import os
-import glob
-
+import cloudinary
 
 @app.route('/')
 @app.route('/index')
