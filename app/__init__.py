@@ -8,8 +8,10 @@ app.config.from_object(Config)
 
 bootstrap=Bootstrap(app)
 
-os.mkdir("app/static/encodedsamples")
-
+try:
+    os.mkdir("app/static/encodedsamples")
+except FileExistsError:
+    pass
 # if os.path.exists("app/static/encodedsamples"): #this doesnt
 #     print("app/static")
 #
