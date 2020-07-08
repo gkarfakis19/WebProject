@@ -25,7 +25,6 @@ def ASCII_to_bitlist(string):
     return bitlist
 
 def imageencode(seed, bool_use_terminator):
-    print("encoding start")
     if bool_use_terminator:
         use_terminator="Y"
     else:
@@ -98,7 +97,6 @@ def imageencode(seed, bool_use_terminator):
             pixels[x,y]=tuple(dummylist)
             #message is encoded
     f.close()
-    print("encoding end")
     im.save("app/static/encodedsamples/encodedsample"+str(seed)+".png", "PNG")
     im.close()
     print(seed)
