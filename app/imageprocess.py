@@ -39,7 +39,7 @@ def imageencode(seed, bool_use_terminator):
 
     random.seed(seed)
     xor_key=str(dec_to_bin(random.getrandbits(16400))) #standard number of bits taken is 16400, only first 16384 are used.
-    im = Image.open("sample.png")
+    im = Image.open("app/static/sample.png")
     pixels = im.load()
     #cleaning the image
     for y in range(0,im.height):
@@ -96,6 +96,7 @@ def imageencode(seed, bool_use_terminator):
                 binpointer+=1
             pixels[x,y]=tuple(dummylist)
             #message is encoded
-
-    im.save("app/static/encodedsample.png", "PNG")
+    f.close()
+    im.save("app/static/encodedsamples/encodedsample"+str(seed)+".png", "PNG")
     im.close()
+    return ("app/static/encodedsamples/encodedsample"+str(seed)+".png")

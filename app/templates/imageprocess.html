@@ -1,28 +1,14 @@
 {% extends "base.html" %}
+{% import 'bootstrap/form.html' as wtf %}
 
-{% block content %}
-    <h1>Image Encoding</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.message.label }}<br>
-            {{ form.message(size=32) }}<br>
-            {% for error in form.message.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.message_key.label }}<br>
-            {{ form.message_key(size=32) }}<br>
-            {% for error in form.message_key.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.message_terminator() }} {{ form.message_terminator.label }}<br>
-        </p>
-        <p>{{ form.image_submit() }}</p>
-    </form>
+
+{% block app_content %}
+    <p><h2>Image Encoding</h2></p>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.render_form(form, button_style="outline-success") }}
+        </div>
+    </div>
     {% if image %}
     <h1>Image</h1>
         <a href={{image}} download>
