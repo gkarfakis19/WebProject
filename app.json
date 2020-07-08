@@ -1,0 +1,11 @@
+{
+  "name": "GKWebsite",
+  "description": "This is the personal GK website.",
+  "repository": "https://github.com/gkarfakis19/WebProject",
+  "success_url": "/index",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
