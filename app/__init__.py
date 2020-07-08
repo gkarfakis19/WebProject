@@ -1,13 +1,19 @@
 from flask import Flask
 from config import Config
 from flask_bootstrap import Bootstrap
-from PIL import Image
 import requests
-
+import os.path
+import os
 app = Flask(__name__)
 app.config.from_object(Config)
 
 bootstrap=Bootstrap(app)
+
+print("REEEEEEEEEEEEEEEEEEEEEEEE")
+print("REEEEEEEEEEEEEEEEEEEEEEEE")
+
+if os.path.exists("app/static"):
+    print("app/static")
 
 file=requests.get("http://res.cloudinary.com/gkwebsite/image/upload/sample_rtt6io.png")
 with open("app/static/sample.png", "wb+") as op:
