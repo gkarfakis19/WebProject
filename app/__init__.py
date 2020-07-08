@@ -8,14 +8,13 @@ app.config.from_object(Config)
 
 bootstrap=Bootstrap(app)
 
-print("REEEEEEEEEEEEEEEEEEEEEEEE")
-print("REEEEEEEEEEEEEEEEEEEEEEEE")
+os.mkdir("app/static/encodedsamples")
 
-if os.path.exists("app/static/encodedsamples"):
-    print("app/static")
-
-if os.path.exists("app/static/sample.png"):
-    print("img found too")
+# if os.path.exists("app/static/encodedsamples"): #this doesnt
+#     print("app/static")
+#
+# if os.path.exists("app/static/sample.png"): #this exists
+#     print("img found too")
 
 file=requests.get("http://res.cloudinary.com/gkwebsite/image/upload/sample_rtt6io.png")
 with open("app/static/sample.png", "wb+") as op:
