@@ -31,6 +31,7 @@ def index():
 #         return redirect(url_for('index'))
 #     return render_template('login.html', title='Sign In', form=form)
 
+
 @app.route('/imageprocess', methods=['GET', 'POST'])
 def imageprocess():
     form = ImageSelectorForm()
