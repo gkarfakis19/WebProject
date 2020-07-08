@@ -3,7 +3,7 @@ from app import app
 from app.forms import LoginForm,ImageSelectorForm
 from app.imageprocess import imageencode
 from app.filehandler import image_flush
-import cloudinary
+import os
 
 @app.route('/')
 @app.route('/index')
@@ -39,6 +39,8 @@ def imageprocess():
         f.close()
         imageencode(form.message_key.data,form.message_terminator.data)
         #return send_file("static/encodedsample.png", as_attachment=True)
+        arr=os.listdir("app/static/encodedsamples")
+        print(arr)
         image_flush("app/static/encodedsamples/*","app/static/encodedsamples\encodedsample" + str(form.message_key.data) + ".png")
         return render_template('imageprocess.html', title='Image Process', form=form,active_imageprocess="active", image=("static/encodedsamples/encodedsample"+str(form.message_key.data)+".png"))
     image_flush("app/static/encodedsamples/*")
