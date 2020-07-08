@@ -99,4 +99,4 @@ def imageencode(seed, bool_use_terminator):
     f.close()
     im.save("app/static/encodedsamples/encodedsample"+str(seed)+".png", "PNG")
     im.close()
-    return ("app/static/encodedsamples/encodedsample"+str(seed)+".png")
+    print(seed)
