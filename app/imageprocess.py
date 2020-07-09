@@ -37,7 +37,7 @@ def imageencode(seed, bool_use_terminator):
         #         ErrorOut()
         terminator="!@#$"
 
-    random.seed(seed)
+    random.seed(0)
     xor_key=str(dec_to_bin(random.getrandbits(16400))) #standard number of bits taken is 16400, only first 16384 are used.
     im = Image.open("app/static/sample.png")
     pixels = im.load()
