@@ -2,9 +2,7 @@ from PIL import Image
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.backends import default_backend
-
-def dec_to_bin(x):
-    return (bin(x)[2:]).zfill(7)
+from app.imageprocess import GenerateKey,dec_to_bin
 
 def imagedecode(seed,fileName):
 
@@ -23,8 +21,12 @@ def imagedecode(seed,fileName):
     )
     key = ''.join('{:08b}'.format(x) for x in bytearray(hkdf.derive(bytes(seed))))
 
-
-    xor_key=str(key) #standard number of bits taken is 256, only first 248 are used.
+    temp_key_master=GenerateKey(seed,None) #standard number of bits taken is 256. We desperately need more, to reduce repetition.
+    index=0
+    xor_key=""
+    for bit in temp_key_master: #this for loop creates 256^2=65536 bits, from which we will use the first 65524
+        xor_key+=GenerateKey(int(bit),bytes((index*28813+52) % 16384)) #semi-randomized salt to make decryption more difficult.
+        index+=1
 
     #getting individual bits back out
     for y in range(0,im.height):

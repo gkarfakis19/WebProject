@@ -37,7 +37,7 @@ def imageprocess():
         f=open("Message.txt","w+")
         f.write(form.message.data)
         f.close()
-        imageencode(form.message_key.data,form.message_terminator.data)
+        imageencode(form.message_key.data,form.message_terminator.data,"sample.png")
         #return send_file("static/encodedsample.png", as_attachment=True)
         arr=os.listdir("app/static/encodedsamples")
         print(arr)

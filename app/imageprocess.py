@@ -26,7 +26,20 @@ def ASCII_to_bitlist(string):
             bitlist.append(int(bit))
     return bitlist
 
-def imageencode(seed, bool_use_terminator):
+def GenerateKey(seed,salt):
+    backend=default_backend()
+    info=b"xor_key_generation"
+    hkdf = HKDF(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        info=info,
+        backend=backend
+    )
+    key=''.join('{:08b}'.format(x) for x in bytearray(hkdf.derive(bytes(seed)))) #makes the ugly bytearray into 256 bits
+    return key
+
+def imageencode(seed, bool_use_terminator, fileName):
     if bool_use_terminator:
         use_terminator="Y"
     else:
@@ -39,22 +52,14 @@ def imageencode(seed, bool_use_terminator):
         #         ErrorOut()
         terminator="!@#$"
 
+    temp_key_master=GenerateKey(seed,None) #standard number of bits taken is 256. We desperately need more, to reduce repetition.
+    index=0
+    xor_key=""
+    for bit in temp_key_master: #this for loop creates 256^2=65536 bits, from which we will use the first 65524
+        xor_key+=GenerateKey(int(bit),bytes((index*28813+52) % 16384)) #semi-randomized salt to make decryption more difficult.
+        index+=1
 
-    backend=default_backend()
-    salt=None
-    info=b"xor_key_generation"
-    hkdf = HKDF(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        info=info,
-        backend=backend
-    )
-    key=''.join('{:08b}'.format(x) for x in bytearray(hkdf.derive(bytes(seed))))
-
-    xor_key=str(key) #standard number of bits taken is 256, only first 248 are used.
-
-    im = Image.open("app/static/sample.png")
+    im = Image.open("app/static/"+fileName)
     im=im.convert('RGB')
     pixels = im.load()
     #cleaning the image
