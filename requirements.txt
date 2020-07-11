@@ -28,7 +28,6 @@ pygame==1.9.6
 PyInstaller==3.6
 pyparsing==2.4.7
 pyperclip==1.8.0
-pytaglib==1.4.6
 python-dateutil==2.8.1
 python-dotenv==0.14.0
 python-editor==1.0.4

@@ -3,8 +3,6 @@ from config import Config
 from flask_bootstrap import Bootstrap
 import requests
 import os
-import taglib
-
 
 app = Flask(__name__)
 app.config.from_object(Config)
