@@ -7,11 +7,11 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 bootstrap=Bootstrap(app)
-#
-# try:
-#     os.mkdir("app/static/encodedsamples")
-# except FileExistsError:
-#     pass
+
+try:
+    os.mkdir("app/static/encodedsamples")
+except FileExistsError:
+    pass
 
 file=requests.get("https://i.ibb.co/jfPhg0Y/sample-ORIG.png")
 with open("app/static/sample.png", "wb+") as op:
