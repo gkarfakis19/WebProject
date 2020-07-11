@@ -75,12 +75,12 @@ def imageencode(seed, bool_use_terminator):
         # print("Warning: message has been cropped. Use a larger resolution picture to encode the full message.")
         # input("Press enter to continue")
 
-    #the contents are XOR scrambled in-place according to the xor_key
-    xorindex=0
-    for i in range(0,len(bin_list)):
-        xorindex=xorindex %16384
-        bin_list[i]= int(bin_list[i]) ^ int(xor_key[xorindex])
-        xorindex+=1
+    # #the contents are XOR scrambled in-place according to the xor_key
+    # xorindex=0
+    # for i in range(0,len(bin_list)):
+    #     xorindex=xorindex %16384
+    #     bin_list[i]= int(bin_list[i]) ^ int(xor_key[xorindex])
+    #     xorindex+=1
 
     #main encoding loop
     binpointer=0
