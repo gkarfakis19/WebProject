@@ -7,22 +7,17 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 bootstrap=Bootstrap(app)
-
-try:
-    os.mkdir("app/static/encodedsamples")
-except FileExistsError:
-    pass
-# if os.path.exists("app/static/encodedsamples"): #this doesnt
-#     print("app/static")
 #
-# if os.path.exists("app/static/sample.png"): #this exists
-#     print("img found too")
+# try:
+#     os.mkdir("app/static/encodedsamples")
+# except FileExistsError:
+#     pass
 
-file=requests.get("http://res.cloudinary.com/gkwebsite/image/upload/sample_rtt6io.png")
+file=requests.get("https://i.ibb.co/jfPhg0Y/sample-ORIG.png")
 with open("app/static/sample.png", "wb+") as op:
     op.write(file.content)
 
-file=requests.get("http://res.cloudinary.com/gkwebsite/image/upload/sample.png")
+file=requests.get("https://i.ibb.co/DMTg9LX/pcb-3374102-1280.png")
 with open("app/static/sample2.png", "wb+") as op:
     op.write(file.content)
 

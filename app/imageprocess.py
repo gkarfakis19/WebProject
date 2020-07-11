@@ -37,9 +37,10 @@ def imageencode(seed, bool_use_terminator):
         #         ErrorOut()
         terminator="!@#$"
 
-    random.seed(0)
+    random.seed(seed)
     xor_key=str(dec_to_bin(random.getrandbits(16400))) #standard number of bits taken is 16400, only first 16384 are used.
     im = Image.open("app/static/sample.png")
+    im=im.convert('RGB')
     pixels = im.load()
     #cleaning the image
     for y in range(0,im.height):
@@ -99,4 +100,3 @@ def imageencode(seed, bool_use_terminator):
     f.close()
     im.save("app/static/encodedsamples/encodedsample"+str(seed)+".png", "PNG")
     im.close()
-    print(seed)

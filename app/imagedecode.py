@@ -92,3 +92,4 @@ for n in decode_ascii_list:
         next_string=(n.to_bytes((n.bit_length() + 7) // 8, 'big').decode())
         f.write(next_string)
 f.write(stringbuffer)
+im.close()
