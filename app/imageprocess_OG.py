@@ -1,7 +1,5 @@
 from PIL import Image
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.hkdf import HKDF
-from cryptography.hazmat.backends import default_backend
+import random
 
 def dec_to_bin(x):
     return (bin(x)[2:]).zfill(7)
@@ -39,21 +37,8 @@ def imageencode(seed, bool_use_terminator):
         #         ErrorOut()
         terminator="!@#$"
 
-
-    backend=default_backend()
-    salt=None
-    info=b"xor_key_generation"
-    hkdf = HKDF(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        info=info,
-        backend=backend
-    )
-    key=''.join('{:08b}'.format(x) for x in bytearray(hkdf.derive(bytes(seed))))
-
-    xor_key=str(key) #standard number of bits taken is 256, only first 248 are used.
-
+    random.seed(seed)
+    xor_key=str(dec_to_bin(random.getrandbits(16400))) #standard number of bits taken is 16400, only first 16384 are used.
     im = Image.open("app/static/sample.png")
     im=im.convert('RGB')
     pixels = im.load()
@@ -93,9 +78,9 @@ def imageencode(seed, bool_use_terminator):
     #the contents are XOR scrambled in-place according to the xor_key
     xorindex=0
     for i in range(0,len(bin_list)):
-       xorindex=xorindex %248
-       bin_list[i]= int(bin_list[i]) ^ int(xor_key[xorindex])
-       xorindex+=1
+        xorindex=xorindex %16384
+        bin_list[i]= int(bin_list[i]) ^ int(xor_key[xorindex])
+        xorindex+=1
 
     #main encoding loop
     binpointer=0
