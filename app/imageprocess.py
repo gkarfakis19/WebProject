@@ -98,7 +98,7 @@ def imageencode(seed, bool_use_terminator, fileName):
     #the contents are XOR scrambled in-place according to the xor_key
     xorindex=0
     for i in range(0,len(bin_list)):
-       xorindex=xorindex %248
+       xorindex=xorindex %65524
        bin_list[i]= int(bin_list[i]) ^ int(xor_key[xorindex])
        xorindex+=1
 

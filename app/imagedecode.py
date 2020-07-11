@@ -39,7 +39,7 @@ def imagedecode(seed,fileName):
     #descrambling
     xorindex=0
     for i in range(0,len(decode_bin_list)):
-        xorindex=xorindex %248
+        xorindex=xorindex %65524
         decode_bin_list[i]=decode_bin_list[i] ^ int(xor_key[xorindex])
         xorindex+=1
 
