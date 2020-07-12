@@ -66,7 +66,7 @@ def imageencode(seed, bool_use_terminator, fileName):
     for y in range(0,im.height):
         for x in range (0,im.width):
             dummylist= list(pixels[x,y]) # casting to a list to make mutable
-            for i in range(0,2):
+            for i in range(0,3):
                 if dummylist[i] % 2 ==1:
                     dummylist[i] -= 1;
             pixels[x,y]=tuple(dummylist)
@@ -109,7 +109,7 @@ def imageencode(seed, bool_use_terminator, fileName):
             dummylist= list(pixels[x,y]) # casting to a list to make mutable
             if binpointer==messagewidth:
                 break
-            for i in range(0,2):
+            for i in range(0,3):
                 if binpointer==messagewidth:
                     break
                 if (bin_list[binpointer]==1):

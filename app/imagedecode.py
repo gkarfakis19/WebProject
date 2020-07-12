@@ -6,7 +6,7 @@ from app.imageprocess import GenerateKey,dec_to_bin
 
 def imagedecode(seed,fileName):
 
-    im = Image.open("app/static/encodedsamples/"+fileName)
+    im = Image.open(fileName)
     pixels = im.load()
     decode_bin_list=[]
     backend = default_backend()
@@ -31,7 +31,7 @@ def imagedecode(seed,fileName):
     #getting individual bits back out
     for y in range(0,im.height):
         for x in range (0,im.width):
-            for i in range(0,2):
+            for i in range(0,3):
                 if pixels[x,y][i] % 2 ==1:
                    decode_bin_list.append(1)
                 else:

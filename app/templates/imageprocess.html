@@ -3,16 +3,26 @@
 
 
 {% block app_content %}
+    {% if form %}
     <p><h2>Image Encoding</h2></p>
     <div class="row">
         <div class="col-md-4">
-            {{ wtf.render_form(form, button_style="outline-success") }}
+            {{ wtf.render_form(form, button_style="outline-success", method="post", enctype="multipart/form-data") }}
         </div>
     </div>
+    {% endif %}
     {% if image %}
-    <h1>Image</h1>
+    <h2>Image</h2>
         <a href={{image}} download>
           <img src={{image}}>
         </a>
     {% endif %}
+    {% if text %}
+    <h2>Decryption contents:</h2>
+        <div>{{text}}</div>
+    {% endif %}
+<!--    {% if upload %}-->
+<!--    <h2>Upload your image:</h2>-->
+<!--        <div>{{text}}</div>-->
+<!--    {% endif %}-->
 {% endblock %}
