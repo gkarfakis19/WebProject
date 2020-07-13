@@ -6,6 +6,7 @@ from app.imageprocess import GenerateKey,dec_to_bin
 
 def imagedecode(seed,fileName):
 
+    returnvalue=0 #0 means: decryption successful, terminator found. 1 means: decryption successful, terminator not found. -1 means decryption unsucessful.
     im = Image.open(fileName)
     pixels = im.load()
     decode_bin_list=[]
@@ -64,11 +65,13 @@ def imagedecode(seed,fileName):
     terminator_used=False
     #cleaning ascii list and finding terminator
     if decode_ascii_list[0]==35:
-        print("Decryption probably succesful")
+        #print("Decryption probably succesful")
         if decode_ascii_list[1]==0:
-            print("Terminator not found.")
+            #print("Terminator not found.")
+            returnvalue=1
         else:
-            print("Terminator found")
+            #print("Terminator found")
+            returnvalue=0
             terminator_used=True
             index=1
             while True:
@@ -78,7 +81,8 @@ def imagedecode(seed,fileName):
                 else:
                     break
     else:
-        print("Incorrect file formatting. Decryption probably unsucessful")
+        #print("Incorrect file formatting. Decryption probably unsucessful")
+        returnvalue=-1
     for i in range(0,2+len(terminator)):
         decode_ascii_list.pop(0)
 
@@ -104,3 +108,4 @@ def imagedecode(seed,fileName):
             f.write(next_string)
     f.write(stringbuffer)
     im.close()
+    return returnvalue

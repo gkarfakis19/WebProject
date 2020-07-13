@@ -52,10 +52,17 @@ def imagedecrypter():
     print (request.files)
     if request.method == 'POST' and 'photo_upload' in request.files: #if image uploaded
         filename = photos.save(request.files['photo_upload'])
-        imagedecode(form.message_key.data,"app/static/Uploads/"+filename)
-        f=open("DecodedMessage.txt", "r")
-        contents=f.read()
-        f.close()
+        #print (form.message_key.data)
+        result=imagedecode(form.message_key.data,"app/static/Uploads/"+filename)
+        if result==-1:
+            contents="Decryption unsuccessful."
+        else:
+            f=open("DecodedMessage.txt", "r")
+            contents="Decryption successful: \n"
+            contents_file=f.read()
+            contents+=contents_file
+            f.close()
+        contents = contents.split("\n")
         image_flush("app/static/Uploads/*", None)
-        return render_template('imageprocess.html', title='Image Decode', form=form, active_imagedecode="active", text=contents)
+        return render_template('imageprocess.html', title='Image Decoded', form=form, active_imagedecode="active", text=contents)
     return render_template('imageprocess.html', title='Image Decode',form=form, active_imagedecode="active", upload="yes")

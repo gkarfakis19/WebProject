@@ -3,8 +3,13 @@
 
 
 {% block app_content %}
+    {% if active_imagedecode %}
+        <p><h2>Image Decoding</h2></p>
+    {% endif %}
+    {% if active_imageprocess %}
+        <p><h2>Image Encoding</h2></p>
+    {% endif %}
     {% if form %}
-    <p><h2>Image Encoding</h2></p>
     <div class="row">
         <div class="col-md-4">
             {{ wtf.render_form(form, button_style="outline-success", method="post", enctype="multipart/form-data") }}
@@ -18,11 +23,9 @@
         </a>
     {% endif %}
     {% if text %}
-    <h2>Decryption contents:</h2>
-        <div>{{text}}</div>
+        <h2>Decryption contents:</h2>
+        {% for para in text %}
+            <p>{{para}}</p>
+        {% endfor %}
     {% endif %}
-<!--    {% if upload %}-->
-<!--    <h2>Upload your image:</h2>-->
-<!--        <div>{{text}}</div>-->
-<!--    {% endif %}-->
 {% endblock %}
