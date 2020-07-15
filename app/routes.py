@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for,send_file,request
 from app import app, photos
-from app.forms import LoginForm,ImageSelectorForm,ImageSelectorUploadForm
+from app.forms import ImageSelectorForm,ImageSelectorUploadForm
 from app.imageprocess import imageencode
 from app.imagedecode import imagedecode
 from app.filehandler import image_flush
