@@ -33,11 +33,11 @@ except FileExistsError:
     pass
 
 file=requests.get("https://i.ibb.co/jfPhg0Y/sample-ORIG.png")
-with open("app/static/sample.png", "wb+") as op:
+with open("app/static/sample2.png", "wb+") as op:
     op.write(file.content)
 
 file=requests.get("https://i.ibb.co/DMTg9LX/pcb-3374102-1280.png")
-with open("app/static/sample2.png", "wb+") as op:
+with open("app/static/sample.png", "wb+") as op:
     op.write(file.content)
 
 from app import routes
