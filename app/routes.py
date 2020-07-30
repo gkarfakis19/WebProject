@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for,send_file,request,send_from_directory
+from flask import render_template, flash, redirect, url_for, send_file, request, send_from_directory, make_response
 from app import app, photos
 from app.forms import ImageSelectorForm,ImageSelectorUploadForm
 from app.imageprocess import imageencode
@@ -62,10 +62,33 @@ def imagedecrypter():
 
 @app.route('/api/encode',methods=['POST'])
 def api_encode_handler():
+    if "message" not in request.args:
+        return None
+    elif "key" not in request.args:
+        return None
     with open("Message.txt","w+") as f:
         f.write(request.args.get("message"))
-    terminator=False
-    if request.args.get("terminate")=="yes":
-        terminator=True
+    terminator=True
+    if request.args.get("terminate")=="false":
+        terminator=False
     imageencode(int(request.args.get("key")), terminator, "sample.png")
     return send_from_directory("static/encodedsamples","encodedsample" + request.args.get("key") + ".png")
+
+@app.route('/api/decode',methods=['POST'])
+def api_decode_handler():
+    if "key" not in request.args:
+        return None
+    if 'photo_upload' in request.files: #if image uploaded
+        filename = photos.save(request.files['photo_upload'])
+        result=imagedecode(request.args.get("key"),"app/static/Uploads/"+filename)
+        if result==-1:
+            contents="Decryption unsuccessful."
+        else:
+            f=open("DecodedMessage.txt", "r")
+            contents="Decryption successful: \n"
+            contents_file=f.read()
+            contents+=contents_file
+            f.close()
+        contents = contents.split("\n")
+        image_flush("app/static/Uploads/*", None)
+        return make_response(contents)
