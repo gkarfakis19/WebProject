@@ -1,4 +1,6 @@
 from flask import render_template, flash, redirect, url_for, send_file, request, send_from_directory, make_response
+from werkzeug.exceptions import abort
+
 from app import app, photos
 from app.forms import ImageSelectorForm,ImageSelectorUploadForm
 from app.imageprocess import imageencode
@@ -63,9 +65,9 @@ def imagedecrypter():
 @app.route('/api/encode',methods=['POST'])
 def api_encode_handler():
     if "message" not in request.args:
-        return None
+        abort(403)
     elif "key" not in request.args:
-        return None
+        abort(403)
     with open("Message.txt","w+") as f:
         f.write(request.args.get("message"))
     terminator=True
@@ -77,10 +79,11 @@ def api_encode_handler():
 @app.route('/api/decode',methods=['POST'])
 def api_decode_handler():
     if "key" not in request.args:
-        return None
-    if 'photo_upload' in request.files: #if image uploaded
+        abort(403)
+    if request.files:
+        print (request.files)
         filename = photos.save(request.files['photo_upload'])
-        result=imagedecode(request.args.get("key"),"app/static/Uploads/"+filename)
+        result=imagedecode(int(request.args.get("key")),"app/static/Uploads/"+filename)
         if result==-1:
             contents="Decryption unsuccessful."
         else:
@@ -89,6 +92,7 @@ def api_decode_handler():
             contents_file=f.read()
             contents+=contents_file
             f.close()
-        contents = contents.split("\n")
         image_flush("app/static/Uploads/*", None)
         return make_response(contents)
+    else:
+        abort(403)
