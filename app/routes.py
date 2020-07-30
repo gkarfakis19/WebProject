@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for,send_file,request
+from flask import render_template, flash, redirect, url_for,send_file,request,send_from_directory
 from app import app, photos
 from app.forms import ImageSelectorForm,ImageSelectorUploadForm
 from app.imageprocess import imageencode
@@ -58,3 +58,14 @@ def imagedecrypter():
         image_flush("app/static/Uploads/*", None)
         return render_template('imageprocess.html', title='Image Decoded', form=form, active_imagedecode="active", text=contents)
     return render_template('imageprocess.html', title='Image Decode',form=form, active_imagedecode="active", upload="yes")
+
+
+@app.route('/api/encode',methods=['POST'])
+def api_encode_handler():
+    with open("Message.txt","w+") as f:
+        f.write(request.args.get("message"))
+    terminator=False
+    if request.args.get("terminate")=="yes":
+        terminator=True
+    imageencode(int(request.args.get("key")), terminator, "sample.png")
+    return send_from_directory("static/encodedsamples","encodedsample" + request.args.get("key") + ".png")

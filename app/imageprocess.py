@@ -42,16 +42,9 @@ def GenerateKey(seed,salt):
 def imageencode(seed, bool_use_terminator, fileName):
     if bool_use_terminator:
         use_terminator="Y"
+        terminator="!@#$"
     else:
         use_terminator="F"
-    if use_terminator=="Y":
-        # if False:
-        #     print("Enter the custom terminator you wish to use. Use more than 1 ASCII character, preferably a symbol: ")
-        #     terminator=input()
-        #     if len(terminator)==1:
-        #         ErrorOut()
-        terminator="!@#$"
-
     temp_key_master=GenerateKey(seed,None) #standard number of bits taken is 256. We desperately need more, to reduce repetition.
     index=0
     xor_key=""
@@ -68,7 +61,7 @@ def imageencode(seed, bool_use_terminator, fileName):
             dummylist= list(pixels[x,y]) # casting to a list to make mutable
             for i in range(0,3):
                 if dummylist[i] % 2 ==1:
-                    dummylist[i] -= 1;
+                    dummylist[i] -= 1
             pixels[x,y]=tuple(dummylist)
             #image is cleaned.
 
