@@ -84,7 +84,6 @@ def api_decode_handler():
         if result==-1:
             decode_content="Decryption unsuccessful."
         else:
-            f=open("DecodedMessage.txt", "r")
             decode_content="Decryption successful: \n"+decode_content
         image_flush("app/static/Uploads/*", None)
         return make_response(decode_content)
