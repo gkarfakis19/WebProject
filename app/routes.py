@@ -75,7 +75,7 @@ def api_encode_handler():
     if request.args.get("terminate")=="false":
         terminator=False
     imageencode(request.args.get("key"), terminator, "sample.png")
-    return send_from_directory("static/encodedsamples","encodedsample" + request.args.get("key") + ".png")
+    return send_from_directory("static/encodedsamples","encodedsample"+str(ord(request.args.get("key")[0]))+".png")
 
 @app.route('/api/decode',methods=['POST'])
 def api_decode_handler():
