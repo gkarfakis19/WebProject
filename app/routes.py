@@ -26,6 +26,7 @@ def index():
 @app.route('/imageprocess', methods=['GET', 'POST'])
 def imageprocess():
     form = ImageSelectorForm()
+    string_seed=form.message_key.data
     if request.method == "POST":
         f=open("Message.txt","w+")
         f.write(form.message.data)
@@ -35,9 +36,9 @@ def imageprocess():
         if 'photo_upload' in request.files and form.image_used.data=="custom":
             filename = photos.save(request.files['photo_upload'])
             imageencode(form.message_key.data,form.message_terminator.data,"Uploads/"+filename)
-            return render_template('imageprocess.html', title='Image Process', form=form, active_imageprocess="active",image=("static/encodedsamples/encodedsample" + str(form.message_key.data) + ".png"))
+            return render_template('imageprocess.html', title='Image Process', form=form, active_imageprocess="active",image=("static/encodedsamples/encodedsample" + str(ord(string_seed[0])) + ".png"))
         imageencode(form.message_key.data,form.message_terminator.data,"sample.png")
-        return render_template('imageprocess.html', title='Image Process', form=form,active_imageprocess="active", image=("static/encodedsamples/encodedsample"+str(form.message_key.data)+".png"))
+        return render_template('imageprocess.html', title='Image Process', form=form,active_imageprocess="active", image=("static/encodedsamples/encodedsample"+str(ord(string_seed[0]))+".png"))
     image_flush("app/static/encodedsamples/*")
     return render_template('imageprocess.html', title='Image Process', form=form, active_imageprocess="active")
 
@@ -73,7 +74,7 @@ def api_encode_handler():
     terminator=True
     if request.args.get("terminate")=="false":
         terminator=False
-    imageencode(int(request.args.get("key")), terminator, "sample.png")
+    imageencode(request.args.get("key"), terminator, "sample.png")
     return send_from_directory("static/encodedsamples","encodedsample" + request.args.get("key") + ".png")
 
 @app.route('/api/decode',methods=['POST'])
@@ -82,7 +83,7 @@ def api_decode_handler():
         abort(403)
     if 'photo_upload' in request.files:
         filename = photos.save(request.files['photo_upload'])
-        result=imagedecode(int(request.args.get("key")),"app/static/Uploads/"+filename)
+        result=imagedecode(request.args.get("key"),"app/static/Uploads/"+filename)
         if result==-1:
             contents="Decryption unsuccessful."
         else:

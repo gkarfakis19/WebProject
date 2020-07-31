@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.backends import default_backend
 from app.imageprocess_generator import GenerateKey,dec_to_bin
 
-def imagedecode(seed,fileName):
+def imagedecode(string_seed,fileName):
 
     returnvalue=0 #0 means: decryption successful, terminator found. 1 means: decryption successful, terminator not found. -1 means decryption unsucessful.
     im = Image.open(fileName)
@@ -12,9 +12,10 @@ def imagedecode(seed,fileName):
     decode_bin_list=[]
 
     im_size=im.height*im.width
-    temp_salt = bytes(GenerateKey((int(seed) * 2 + 21) % 64, bytes((int(seed) * 213 + 51) % 128), 256, 100), 'utf-8')
+    seed=bytes(string_seed,"utf-8")
+    temp_salt = bytes(GenerateKey(seed, bytes("unicorns and rainbows","utf-8"), 256, 50), 'utf-8')
     print("step1")
-    xor_key = GenerateKey(seed, temp_salt, im_size + 6, 300)  # key generated
+    xor_key = GenerateKey(seed, temp_salt, im_size + 6, 350)  # key generated
     print("step2")
 
     #getting individual bits back out

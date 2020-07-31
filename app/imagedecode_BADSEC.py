@@ -2,7 +2,7 @@ from PIL import Image
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.backends import default_backend
-from app.imageprocess import GenerateKey,dec_to_bin
+from app.imageprocess_BADSEC import GenerateKey,dec_to_bin
 
 def imagedecode(seed,fileName):
 

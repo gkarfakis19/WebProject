@@ -6,13 +6,13 @@ from app import photos
 
 class ImageSelectorForm(FlaskForm):
     image_used = RadioField( "Image Selection: ",choices=[('sample', 'Use the default Sample'), ("custom",'OR upload your own image')])
-    photo_upload=FileField('Image (Leave empty in order to use the default sample)', validators=[FileAllowed(photos, 'Images only!')])
+    photo_upload=FileField('Image (Leave empty in order to use the default sample)', validators=[FileAllowed(photos, 'PNG Images only!')])
     message= TextAreaField("Message", validators=[DataRequired()])
-    message_key=IntegerField("Key",validators=[DataRequired()])
+    message_key=TextAreaField("Key",validators=[DataRequired()])
     message_terminator= BooleanField("Use a message terminator")
     image_submit= SubmitField("Encode")
 
 class ImageSelectorUploadForm(FlaskForm):
-    photo_upload=FileField('Image', validators=[FileRequired(), FileAllowed(photos, 'Images only!')])
-    message_key=IntegerField("Key",validators=[DataRequired()])
+    photo_upload=FileField('Image', validators=[FileRequired(), FileAllowed(photos, 'PNG Images only!')])
+    message_key=TextAreaField("Key",validators=[DataRequired()])
     image_submit= SubmitField("Decode")
