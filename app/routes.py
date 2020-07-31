@@ -21,7 +21,7 @@ def index():
             'body': 'Test 2!'
         }
     ]
-    return render_template('index.html', title='Home', user=user,posts=posts, active_home="active")
+    return render_template('index.html', title='Home', user=user, active_home="active")
 
 @app.route('/imageprocess', methods=['GET', 'POST'])
 def imageprocess():
