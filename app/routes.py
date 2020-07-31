@@ -62,11 +62,17 @@ def api_encode_handler():
         abort(403)
     elif "key" not in request.args:
         abort(403)
-    terminator=True
-    if request.args.get("terminate")=="false":
-        terminator=False
-    imageencode(request.args.get("key"), terminator, "sample.png",request.args.get("message"))
-    return send_from_directory("static/encodedsamples","encodedsample"+str(ord(request.args.get("key")[0]))+".png")
+    terminator = True
+    if request.args.get("terminate") == "false":
+        terminator = False
+    if "photo_upload" in request.files:
+        filename=photos.save(request.files['photo_upload'])
+        imageencode(request.args.get("key"), terminator, "Uploads/"+filename, request.args.get("message"))
+        image_flush("app/static/Uploads/*", None)
+        return send_from_directory("static/encodedsamples","encodedsample" + str(ord(request.args.get("key")[0])) + ".png")
+    else:
+        imageencode(request.args.get("key"), terminator, "sample.png",request.args.get("message"))
+        return send_from_directory("static/encodedsamples","encodedsample"+str(ord(request.args.get("key")[0]))+".png")
 
 @app.route('/api/decode',methods=['POST'])
 def api_decode_handler():
