@@ -3,8 +3,8 @@ from werkzeug.exceptions import abort
 
 from app import app, photos
 from app.forms import ImageSelectorForm,ImageSelectorUploadForm
-from app.imageprocess import imageencode
-from app.imagedecode import imagedecode
+from app.imageprocess_generator import imageencode
+from app.imagedecode_generator import imagedecode
 from app.filehandler import image_flush
 
 @app.route('/')
@@ -80,8 +80,7 @@ def api_encode_handler():
 def api_decode_handler():
     if "key" not in request.args:
         abort(403)
-    if request.files:
-        print (request.files)
+    if 'photo_upload' in request.files:
         filename = photos.save(request.files['photo_upload'])
         result=imagedecode(int(request.args.get("key")),"app/static/Uploads/"+filename)
         if result==-1:

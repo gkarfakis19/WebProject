@@ -41,10 +41,10 @@ def GenerateKey(seed,salt):
 
 def imageencode(seed, bool_use_terminator, fileName):
     if bool_use_terminator:
-        use_terminator="Y"
         terminator="!@#$"
     else:
-        use_terminator="F"
+        terminator=""
+
     temp_key_master=GenerateKey(seed,None) #standard number of bits taken is 256. We desperately need more, to reduce repetition.
     index=0
     xor_key=""
@@ -76,17 +76,11 @@ def imageencode(seed, bool_use_terminator, fileName):
             bin_list.append(int(binchar))
 
     #the terminator and extra components are added to the message
-    if use_terminator=="Y":
+    if bool_use_terminator:
         terminator_bit_list=ASCII_to_bitlist(terminator)
         bin_list= ASCII_to_bitlist("#")+terminator_bit_list+ASCII_to_bitlist(chr(0))+bin_list+terminator_bit_list+ASCII_to_bitlist("\n")
     else:
         bin_list= ASCII_to_bitlist("#")+ASCII_to_bitlist(chr(0))+bin_list
-
-    messagewidth=len(bin_list)
-    if messagewidth>im.height*im.width:
-        pass
-        # print("Warning: message has been cropped. Use a larger resolution picture to encode the full message.")
-        # input("Press enter to continue")
 
     #the contents are XOR scrambled in-place according to the xor_key
     xorindex=0

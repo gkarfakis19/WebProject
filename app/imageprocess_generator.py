@@ -1,5 +1,7 @@
 from PIL import Image
-import random
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 def dec_to_bin(x):
     return (bin(x)[2:]).zfill(7)
@@ -9,10 +11,6 @@ def increment_pointer(pointer, meswidth):
         return (pointer-meswidth)+1
     else:
         return pointer+1
-
-def ErrorOut():
-    # input("Error thrown. Press enter to exit.")
-    raise IOError
 
 def ASCII_to_bitlist(string):
     binarylist=[]
@@ -24,31 +22,41 @@ def ASCII_to_bitlist(string):
             bitlist.append(int(bit))
     return bitlist
 
-def imageencode(seed, bool_use_terminator):
-    if bool_use_terminator:
-        use_terminator="Y"
-    else:
-        use_terminator="F"
-    if use_terminator=="Y":
-        # if False:
-        #     print("Enter the custom terminator you wish to use. Use more than 1 ASCII character, preferably a symbol: ")
-        #     terminator=input()
-        #     if len(terminator)==1:
-        #         ErrorOut()
-        terminator="!@#$"
+def GenerateKey(seed,salt,size,iterations):
+    backend=default_backend()
+    info=b"xor_key_generation"
+    pbkdf2hmac = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=size,
+        salt=salt,
+        iterations=iterations,
+        backend=backend
+    )
+    key=''.join('{:08b}'.format(x) for x in bytearray(pbkdf2hmac.derive(bytes(seed)))) #makes the ugly bytearray into bits
+    return key
 
-    random.seed(seed)
-    xor_key=str(dec_to_bin(random.getrandbits(16400))) #standard number of bits taken is 16400, only first 16384 are used.
-    im = Image.open("app/static/sample.png")
+def imageencode(seed, bool_use_terminator, fileName):
+
+    if bool_use_terminator:
+        terminator="!@#$"
+    else:
+        terminator=""
+    im = Image.open("app/static/"+fileName)
     im=im.convert('RGB')
     pixels = im.load()
+    im_size=im.height*im.width
+
+    temp_salt= bytes(GenerateKey((int(seed)*2 + 21)%64,bytes((int(seed)*213+51)%128),256,100),'utf-8')
+    print ("step1")
+    xor_key=GenerateKey(seed,temp_salt,im_size+6,300) #key generated
+    print("step2")
     #cleaning the image
     for y in range(0,im.height):
         for x in range (0,im.width):
             dummylist= list(pixels[x,y]) # casting to a list to make mutable
-            for i in range(0,2):
+            for i in range(0,3):
                 if dummylist[i] % 2 ==1:
-                    dummylist[i] -= 1;
+                    dummylist[i] -= 1
             pixels[x,y]=tuple(dummylist)
             #image is cleaned.
 
@@ -63,33 +71,28 @@ def imageencode(seed, bool_use_terminator):
             bin_list.append(int(binchar))
 
     #the terminator and extra components are added to the message
-    if use_terminator=="Y":
+    if bool_use_terminator:
         terminator_bit_list=ASCII_to_bitlist(terminator)
         bin_list= ASCII_to_bitlist("#")+terminator_bit_list+ASCII_to_bitlist(chr(0))+bin_list+terminator_bit_list+ASCII_to_bitlist("\n")
     else:
         bin_list= ASCII_to_bitlist("#")+ASCII_to_bitlist(chr(0))+bin_list
 
-    messagewidth=len(bin_list)
-    if messagewidth>im.height*im.width:
-        pass
-        # print("Warning: message has been cropped. Use a larger resolution picture to encode the full message.")
-        # input("Press enter to continue")
-
     #the contents are XOR scrambled in-place according to the xor_key
     xorindex=0
     for i in range(0,len(bin_list)):
-        xorindex=xorindex %16384
-        bin_list[i]= int(bin_list[i]) ^ int(xor_key[xorindex])
-        xorindex+=1
+       xorindex=xorindex %(im_size)
+       bin_list[i]= int(bin_list[i]) ^ int(xor_key[xorindex])
+       xorindex+=1
 
     #main encoding loop
     binpointer=0
+    messagewidth=len(bin_list)
     for y in range(0,im.height):
         for x in range(0,im.width):
             dummylist= list(pixels[x,y]) # casting to a list to make mutable
             if binpointer==messagewidth:
                 break
-            for i in range(0,2):
+            for i in range(0,3):
                 if binpointer==messagewidth:
                     break
                 if (bin_list[binpointer]==1):
