@@ -28,7 +28,7 @@ def imageprocess():
     form = ImageSelectorForm()
     string_seed=form.message_key.data
     if request.method == "POST":
-        if request.data==b'' and form.image_used.data=="custom":
+        if "photo_upload" not in request.files and form.image_used.data=="custom":
             return render_template('imageprocess.html', title='Image Process', form=form, active_imageprocess="active")
         if 'photo_upload' in request.files and form.image_used.data=="custom":
             filename = photos.save(request.files['photo_upload'])
