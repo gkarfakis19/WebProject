@@ -28,16 +28,13 @@ def imageprocess():
     form = ImageSelectorForm()
     string_seed=form.message_key.data
     if request.method == "POST":
-        f=open("Message.txt","w+")
-        f.write(form.message.data)
-        f.close()
         if request.data==b'' and form.image_used.data=="custom":
             return render_template('imageprocess.html', title='Image Process', form=form, active_imageprocess="active")
         if 'photo_upload' in request.files and form.image_used.data=="custom":
             filename = photos.save(request.files['photo_upload'])
-            imageencode(form.message_key.data,form.message_terminator.data,"Uploads/"+filename)
+            imageencode(form.message_key.data,form.message_terminator.data,"Uploads/"+filename,form.message.data)
             return render_template('imageprocess.html', title='Image Process', form=form, active_imageprocess="active",image=("static/encodedsamples/encodedsample" + str(ord(string_seed[0])) + ".png"))
-        imageencode(form.message_key.data,form.message_terminator.data,"sample.png")
+        imageencode(form.message_key.data,form.message_terminator.data,"sample.png",form.message.data)
         return render_template('imageprocess.html', title='Image Process', form=form,active_imageprocess="active", image=("static/encodedsamples/encodedsample"+str(ord(string_seed[0]))+".png"))
     image_flush("app/static/encodedsamples/*")
     return render_template('imageprocess.html', title='Image Process', form=form, active_imageprocess="active")
@@ -48,18 +45,14 @@ def imagedecrypter():
     form=ImageSelectorUploadForm()
     if request.method == 'POST' and 'photo_upload' in request.files: #if image uploaded
         filename = photos.save(request.files['photo_upload'])
-        result=imagedecode(form.message_key.data,"app/static/Uploads/"+filename)
+        result, decode_content=imagedecode(form.message_key.data,"app/static/Uploads/"+filename)
         if result==-1:
-            contents="Decryption unsuccessful."
+            decode_content="Decryption unsuccessful."
         else:
-            f=open("DecodedMessage.txt", "r")
-            contents="Decryption successful: \n"
-            contents_file=f.read()
-            contents+=contents_file
-            f.close()
-        contents = contents.split("\n")
+            decode_content="Decryption successful: \n"+decode_content
+        decode_content = decode_content.split("\n")
         image_flush("app/static/Uploads/*", None)
-        return render_template('imageprocess.html', title='Image Decoded', form=form, active_imagedecode="active", text=contents)
+        return render_template('imageprocess.html', title='Image Decoded', form=form, active_imagedecode="active", text=decode_content)
     return render_template('imageprocess.html', title='Image Decode',form=form, active_imagedecode="active", upload="yes")
 
 
@@ -69,12 +62,10 @@ def api_encode_handler():
         abort(403)
     elif "key" not in request.args:
         abort(403)
-    with open("Message.txt","w+") as f:
-        f.write(request.args.get("message"))
     terminator=True
     if request.args.get("terminate")=="false":
         terminator=False
-    imageencode(request.args.get("key"), terminator, "sample.png")
+    imageencode(request.args.get("key"), terminator, "sample.png",request.args.get("message"))
     return send_from_directory("static/encodedsamples","encodedsample"+str(ord(request.args.get("key")[0]))+".png")
 
 @app.route('/api/decode',methods=['POST'])
@@ -83,16 +74,13 @@ def api_decode_handler():
         abort(403)
     if 'photo_upload' in request.files:
         filename = photos.save(request.files['photo_upload'])
-        result=imagedecode(request.args.get("key"),"app/static/Uploads/"+filename)
+        result, decode_content =imagedecode(request.args.get("key"),"app/static/Uploads/"+filename)
         if result==-1:
-            contents="Decryption unsuccessful."
+            decode_content="Decryption unsuccessful."
         else:
             f=open("DecodedMessage.txt", "r")
-            contents="Decryption successful: \n"
-            contents_file=f.read()
-            contents+=contents_file
-            f.close()
+            decode_content="Decryption successful: \n"+decode_content
         image_flush("app/static/Uploads/*", None)
-        return make_response(contents)
+        return make_response(decode_content)
     else:
         abort(403)

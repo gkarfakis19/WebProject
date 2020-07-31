@@ -46,7 +46,6 @@ def imagedecode(string_seed,fileName):
         except IndexError:
             break
 
-    f=open("DecodedMessage.txt","w+" )
     should_stop=False
     #getting ascii letters from the 7bit groupings
     stringbuffer=""
@@ -75,6 +74,7 @@ def imagedecode(string_seed,fileName):
     for i in range(0,2+len(terminator)):
         decode_ascii_list.pop(0)
 
+    decode_content=""
     for n in decode_ascii_list:
         if terminator_used==True:
             if should_stop:
@@ -84,17 +84,17 @@ def imagedecode(string_seed,fileName):
                 stringbuffer+=next_string
                 loc=stringbuffer.find(terminator)
                 if loc==-1:
-                    f.write(stringbuffer)
+                    decode_content+=stringbuffer
                     stringbuffer=""
                 else: #terminator found
-                    f.write(stringbuffer[:loc])
+                    decode_content+=stringbuffer[:loc]
                     should_stop=True
                     stringbuffer=""
             else:
                 stringbuffer+=next_string
         else:
             next_string=(n.to_bytes((n.bit_length() + 7) // 8, 'big').decode())
-            f.write(next_string)
-    f.write(stringbuffer)
+            decode_content+=next_string
+    decode_content+=stringbuffer
     im.close()
-    return returnvalue
+    return returnvalue,decode_content

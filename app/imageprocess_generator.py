@@ -41,7 +41,7 @@ def GenerateKey(seed, salt, size, iterations):
     return key
 
 
-def imageencode(string_seed, bool_use_terminator, fileName):
+def imageencode(string_seed, bool_use_terminator, fileName, encode_content):
     if bool_use_terminator:
         terminator = "!@#$"
     else:
@@ -66,10 +66,9 @@ def imageencode(string_seed, bool_use_terminator, fileName):
             # image is cleaned.
 
     # information will now be encoded into it
-    f = open("Message.txt", "rb")
     bin_list = []
     # a list of binary contents is created.
-    num = list(f.read())
+    num = list(bytearray(encode_content,"utf-8"))
     for pos in range(0, len(num)):
         binnumber = dec_to_bin(num[pos])
         for binchar in binnumber:
@@ -106,6 +105,5 @@ def imageencode(string_seed, bool_use_terminator, fileName):
                 binpointer += 1
             pixels[x, y] = tuple(dummylist)
             # message is encoded
-    f.close()
     im.save("app/static/encodedsamples/encodedsample" + str(ord(string_seed[0])) + ".png", "PNG")
     im.close()
