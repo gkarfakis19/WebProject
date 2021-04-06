@@ -6,7 +6,8 @@ Implements a very simple flask-based website, that implements a steganographic a
 It takes a message and key, and provides encoding and decoding functions for the steganography in an arbitrary image or the default sample.
 
 In order to use, click the header "Image Encoding", and follow the instructions.
-For ease of decryption, use the terminator.
+
+For ease of decryption, use a terminator.
 The message and key can both be random ASCII strings.
 You will require the key in order to decrypt the message.
 
